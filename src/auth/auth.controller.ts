@@ -3,18 +3,19 @@ import {
   Body,
   HttpCode,
   Post,
-  // Param,
+  Param,
   // Get,
-  // Delete,
+  Delete,
   UsePipes,
   ValidationPipe,
   BadRequestException,
-  // UseGuards,
+  UseGuards,
 } from "@nestjs/common";
+import { IdValidationPipe } from "src/pipes/id-validation.pipe";
 import { ALREADY_REGISTERED_ERROR } from "./auth.constans";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { SignInDto } from "./dto/signin.dto";
-// import { JwtAuthGuard } from "./guards/jwt.guard";
+import { JwtAuthGuard } from "./guards/jwt.guard";
 import { UsersService } from "./users.service";
 
 @Controller("users")
@@ -42,9 +43,9 @@ export class AuthController {
     return await this.userService.signinUser(validEmail);
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Delete(":id")
-  // async delete(@Param("id", IdValidationPipe) id: string) {
-  //   await this.userService.deleteUser(id);
-  // }
+  @UseGuards(JwtAuthGuard)
+  @Delete(":id")
+  async delete(@Param("id", IdValidationPipe) id: string) {
+    await this.userService.deleteUser(id);
+  }
 }
