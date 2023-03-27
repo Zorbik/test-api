@@ -7,6 +7,7 @@ import { JwtService } from "@nestjs/jwt";
 import { USER_NOT_FOUND_ERROR, WRONG_PASSWORD_ERROR } from "./auth.constans";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { User, UserDocument } from "./user.model/user.model";
+import { Statistic } from "./dto/results.dto";
 
 @Injectable()
 export class UsersService {
@@ -25,6 +26,7 @@ export class UsersService {
       createdAt: createDate,
       updatedAt: createDate,
     });
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { __v, password, ...user } = response.toObject();
 
@@ -35,12 +37,28 @@ export class UsersService {
 
   async signinUser(email: string) {
     const user = await this.userModel
-      .findOne({ email }, { password: 0, __v: 0 })
+      .findOne({ email }, { __v: 0, password: 0 })
       .exec();
 
     const token = await this.jwtService.signAsync({ email });
 
     return { user, token };
+  }
+
+  async updateUser(id: string, dto: Statistic) {
+    const user = await this.userModel
+      .findByIdAndUpdate(
+        id,
+        {
+          $push: { statistics: dto },
+          updatedAt: new Date(),
+        },
+        { new: true },
+      )
+      .select("-__v -password")
+      .exec();
+
+    return user;
   }
 
   async deleteUser(id: string) {

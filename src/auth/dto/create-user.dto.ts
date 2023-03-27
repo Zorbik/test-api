@@ -1,5 +1,5 @@
 import { IsString, Length, IsEmail } from "class-validator";
-import {} from "class-validator/types/decorator/decorators";
+import { Statistic } from "./results.dto";
 
 export class CreateUserDto {
   @IsEmail()
@@ -12,4 +12,6 @@ export class CreateUserDto {
   @Length(7, 30)
   @IsString()
   password: string;
+
+  statistics: Statistic[];
 }

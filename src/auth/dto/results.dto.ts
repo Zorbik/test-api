@@ -1,10 +1,5 @@
-export interface statistic {
-  section: string;
+export interface Statistic {
+  category: string;
   correct: number;
   incorrect: number;
-}
-
-export class Results {
-  userId: string;
-  statistics: statistic[];
 }

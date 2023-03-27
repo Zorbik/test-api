@@ -11,6 +11,7 @@ const testRegDelDto: CreateUserDto = {
   email: "test@test.com",
   name: "Test",
   password: "test123@",
+  statistics: [],
 };
 
 const testLogInDto: SignInDto = {
@@ -21,6 +22,7 @@ const testLogInDto: SignInDto = {
 describe("AppController (e2e)", () => {
   let app: INestApplication;
   let createdId: string;
+  let token: string;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -39,6 +41,7 @@ describe("AppController (e2e)", () => {
         .expect(201);
 
       createdId = body.user._id;
+      token = body.token;
       return expect(createdId).toBeDefined();
     } catch (error) {
       console.log("error:", error);
@@ -81,15 +84,16 @@ describe("AppController (e2e)", () => {
     }
   });
 
-  // it("/users/:id (DELETE) - success", async () => {
-  //   try {
-  //     return await request(app.getHttpServer())
-  //       .delete(`/users/${createdId}`)
-  //       .expect(200);
-  //   } catch (error) {
-  //     console.log("error:", error);
-  //   }
-  // });
+  it("/users/:id (DELETE) - success", async () => {
+    try {
+      return await request(app.getHttpServer())
+        .delete(`/users/${createdId}`)
+        .set("Authorization", `Bearer ${token}`)
+        .expect(200);
+    } catch (error) {
+      console.log("error:", error);
+    }
+  });
 
   afterAll(() => {
     disconnect();

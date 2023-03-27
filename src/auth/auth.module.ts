@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
 import { MongooseModule } from "@nestjs/mongoose";
 import { PassportModule } from "@nestjs/passport";
+import { TelegramModule } from "../telegram/telegram.module";
 import { getJWTConfig } from "../configs/jwt.config";
 import { AuthController } from "./auth.controller";
 import { JwtStrategy } from "./strategies/jwt.strategy";
@@ -20,6 +21,7 @@ import { UsersService } from "./users.service";
       useFactory: getJWTConfig,
     }),
     PassportModule,
+    TelegramModule,
   ],
 
   providers: [UsersService, JwtStrategy],

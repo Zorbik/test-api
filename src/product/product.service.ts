@@ -21,6 +21,10 @@ export class ProductService {
       .exec();
   }
 
+  async findAll() {
+    return await this.productModel.find({}).exec();
+  }
+
   async search(query: string): Promise<Product[]> {
     return await this.productModel
       .find({
