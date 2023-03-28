@@ -6,6 +6,7 @@ import { AppModule } from "../src/app.module";
 import { CreateUserDto } from "../src/auth/dto/create-user.dto";
 import { USER_NOT_FOUND_ERROR } from "../src/auth/auth.constans";
 import { SignInDto } from "../src/auth/dto/signin.dto";
+import { Statistic } from "../src/auth/dto/results.dto";
 
 const testRegDelDto: CreateUserDto = {
   email: "test@test.com",
@@ -17,6 +18,12 @@ const testRegDelDto: CreateUserDto = {
 const testLogInDto: SignInDto = {
   email: "testLogIn@test.com",
   password: "test123@",
+};
+
+const statDto: Statistic = {
+  category: "theory",
+  correct: 6,
+  incorrect: 6,
 };
 
 describe("AppController (e2e)", () => {
@@ -79,6 +86,19 @@ describe("AppController (e2e)", () => {
         .expect(401);
 
       return expect(body.message).toBe(USER_NOT_FOUND_ERROR);
+    } catch (error) {
+      console.log("error:", error);
+    }
+  });
+
+  it("/users/:id (PATCH) - success", async () => {
+    try {
+      const { body } = await request(app.getHttpServer())
+        .patch(`/users/${createdId}`)
+        .set("Authorization", `Bearer ${token}`)
+        .send(statDto);
+
+      return expect(body.statistics[0].category).toBe(statDto.category);
     } catch (error) {
       console.log("error:", error);
     }

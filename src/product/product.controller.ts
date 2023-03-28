@@ -26,6 +26,7 @@ export class ProductController {
   constructor(private readonly testService: ProductService) {}
 
   @UsePipes(new ValidationPipe())
+  @UseGuards(JwtAuthGuard)
   @Post("create")
   async create(@Body() dto: CreateTestDto) {
     return await this.testService.create(dto);
